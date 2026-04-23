@@ -17,8 +17,17 @@ class HMMTagger:
         self.tag_counts = Counter()
 
     def train(self, tagged_sents):
-        # TO DO: Iterate through the tagged sentences. Implement training logic here
-        pass
+        for sentence in tagged_sents:
+            prev_tag = "<START>"
+
+            for word, tag in sentence:
+                self.transitions[prev_tag][tag] += 1
+                self.emissions[tag][word] += 1
+                self.tag_counts[tag] += 1
+                self.tags.add(tag)
+                self.vocab.add(word)
+                
+                prev_tag = tag
 
     def get_emission_prob(self, word, tag):
         # TO DO: Implement emission probability calculation.
