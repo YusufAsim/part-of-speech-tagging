@@ -10,10 +10,29 @@ nltk.download('brown', quiet=True)
 nltk.download('universal_tagset', quiet=True)
 
 def extract_features(sentence, index):
+    word = sentence[index]
     
     features = {
-        # TO DO: Add features as a dictionary for the current word
+        "word": word,
+        "word_lower": word.lower(),
+        "prefix_1": word[:1].lower(),
+        "prefix_2": word[:2].lower(),
+        "suffix_1": word[-1:].lower(),
+        "suffix_2": word[-2:].lower(),
+        "is_upper": word.isupper(),
+        "is_title": word.istitle(),
+        "is_digit": word.isdigit(),
     }
+
+    if index != 0:
+        prev_word = sentence[index - 1]
+        features["prev_word"] = prev_word
+        features["prev_word_lower"] = prev_word.lower()
+
+    if index != len(sentence) - 1:
+        next_word = sentence[index + 1]
+        features["next_word"] = next_word
+        features["next_word_lower"] = next_word.lower()
     
     return features
 
