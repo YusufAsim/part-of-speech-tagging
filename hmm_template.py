@@ -99,7 +99,6 @@ def main():
     
     print(f"\nWorking with Subset -> Train sentences: {len(train_sents)}, Test sentences: {len(test_sents)}")
     
-    """
     tagger = HMMTagger()
     tagger.train(train_sents)
 
@@ -145,7 +144,6 @@ def main():
         print(f"SENTENCE  : {' '.join(words)}")
         print(f"ORIGINAL  : {true}")
         print(f"PREDICTED : {pred}")
-    """
 
 if __name__ == "__main__":
     main()
