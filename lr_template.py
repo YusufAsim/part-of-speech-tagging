@@ -49,10 +49,43 @@ def main():
     
     print(f"\nWorking with Subset -> Train sentences: {len(train_sents)}, Test sentences: {len(test_sents)}")
 
-    # TO DO: Prepare X_train, y_train, X_test, y_test using train_sents, test_sents and extract_features()
-    # TO DO: Train Logistic Regression model
+    X_train = []
+    y_train = []
 
-    """
+    for sent in train_sents:
+        words = []
+        tags = []
+
+        for word, tag in sent:
+            words.append(word)
+            tags.append(tag)
+
+        for i in range(len(words)):
+            X_train.append(extract_features(words, i))
+            y_train.append(tags[i])
+
+    X_test = []
+    y_test = []
+
+    for sent in test_sents:
+        words = []
+        tags = []
+
+        for word, tag in sent:
+            words.append(word)
+            tags.append(tag)
+
+        for i in range(len(words)):
+            X_test.append(extract_features(words, i))
+            y_test.append(tags[i])
+
+    model = Pipeline([
+        ("vectorizer", DictVectorizer(sparse=True)),
+        ("classifier", LogisticRegression(max_iter=250))
+    ])
+
+    model.fit(X_train, y_train)
+
     print("\n=== LOGISTIC REGRESSION EVALUATION ===")
     y_pred = []
     last_5_samples = []
@@ -87,7 +120,6 @@ def main():
         print(f"SENTENCE  : {' '.join(words)}")
         print(f"ORIGINAL  : {true}")
         print(f"PREDICTED : {pred}")
-    """
 
 if __name__ == "__main__":
     main()
