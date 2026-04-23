@@ -30,12 +30,19 @@ class HMMTagger:
                 prev_tag = tag
 
     def get_emission_prob(self, word, tag):
-        # TO DO: Implement emission probability calculation.
-        return 0.0
+        if word in self.vocab:
+            return np.log((self.emissions[tag][word] + 1e-10) / self.tag_counts[tag])
+        else:
+            return np.log(1 / (self.tag_counts[tag] + len(self.vocab)))
 
     def get_transition_prob(self, prev_tag, curr_tag):
-        # TO DO: Implement transition probability calculation.
-        return 0.0
+        transition_count = self.transitions[prev_tag][curr_tag]
+        total_transitions = 0
+
+        for count in self.transitions[prev_tag].values():
+            total_transitions += count
+
+        return np.log((transition_count + 1) / (total_transitions + len(self.tags)))
 
     def viterbi(self, sentence):
         # TO DO: Implement Viterbi algorithm to find the most likely tag sequence
