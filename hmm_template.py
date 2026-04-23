@@ -45,8 +45,45 @@ class HMMTagger:
         return np.log((transition_count + 1) / (total_transitions + len(self.tags)))
 
     def viterbi(self, sentence):
-        # TO DO: Implement Viterbi algorithm to find the most likely tag sequence
-        return []
+        tags = sorted(self.tags)
+        n_tags = len(tags)
+        n_words = len(sentence)
+        viterbi = np.full((n_tags, n_words), -np.inf)
+        backpointer = np.zeros((n_tags, n_words), dtype=int)
+
+        for i, tag in enumerate(tags):
+            viterbi[i][0] = (
+                self.get_transition_prob("<START>", tag)
+                + self.get_emission_prob(sentence[0], tag)
+            )
+
+        for j in range(1, n_words):
+            for i, curr_tag in enumerate(tags):
+                best_score = -np.inf
+                best_prev = 0
+
+                for k, prev_tag in enumerate(tags):
+                    score = (
+                        viterbi[k][j - 1] + self.get_transition_prob(prev_tag, curr_tag) + self.get_emission_prob(sentence[j], curr_tag)
+                    )
+
+                    if score > best_score:
+                        best_score = score
+                        best_prev = k
+
+                viterbi[i][j] = best_score
+                backpointer[i][j] = best_prev
+
+        best_last = np.argmax(viterbi[:, n_words - 1])
+        best_path = [best_last]
+
+        for j in range(n_words - 1, 0, -1):
+            best_last = backpointer[best_last][j]
+            best_path.append(best_last)
+
+        best_path.reverse()
+        return [tags[i] for i in best_path]
+
 
 def main():
 
